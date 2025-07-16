@@ -16,7 +16,7 @@ CORS(app)  # Allow frontend access
 # AWS S3 Config
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-BUCKET_NAME = "your-s3-bucket-name"
+BUCKET_NAME = "document-locker-demo-bucket"
 
 s3 = boto3.client(
     's3',
