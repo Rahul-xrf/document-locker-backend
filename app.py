@@ -66,6 +66,14 @@ def download_file(filename):
     except Exception as e:
         return jsonify({"error": str(e)}), 500
 
+@app.route('/storage', methods=['GET'])
+def get_storage_usage():
+    try:
+        objects = s3.list_objects_v2(Bucket=BUCKET_NAME)
+        total_bytes = sum(obj['Size'] for obj in objects.get('Contents', []))
+        return jsonify({"total_bytes": total_bytes})
+    except Exception as e:
+        return jsonify({"error": str(e)}), 500
 
 if __name__ == '__main__':
     app.run(debug=True)
