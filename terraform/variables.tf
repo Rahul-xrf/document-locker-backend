@@ -1,9 +1,9 @@
 variable "region" {
-  default = "ap-south-1"
+  default = "us-east-1"
 }
 
 variable "bucket_name" {
-  default = "document-locker-demo-bucket"
+  default = "s3-test-bucket-rahul-xrf-0716"
 }
 
 variable "instance_type" {

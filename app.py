@@ -1,10 +1,11 @@
+import os
 from dotenv import load_dotenv
 load_dotenv()
+
 
 from flask import Flask, request, jsonify, send_file
 from flask_cors import CORS
 import boto3
-import os
 from botocore.exceptions import NoCredentialsError, ClientError
 from werkzeug.utils import secure_filename
 from io import BytesIO
@@ -17,7 +18,7 @@ CORS(app)
 # AWS S3 Config
 AWS_ACCESS_KEY = os.getenv("AWS_ACCESS_KEY_ID")
 AWS_SECRET_KEY = os.getenv("AWS_SECRET_ACCESS_KEY")
-BUCKET_NAME = "document-locker-demo-bucket"
+BUCKET_NAME = "s3-test-bucket-rahul-xrf-0716"
 
 # Initialize S3 client only if credentials are available
 s3 = None
@@ -26,7 +27,8 @@ if AWS_ACCESS_KEY and AWS_SECRET_KEY:
         s3 = boto3.client(
             's3',
             aws_access_key_id=AWS_ACCESS_KEY,
-            aws_secret_access_key=AWS_SECRET_KEY
+            aws_secret_access_key=AWS_SECRET_KEY,
+            region_name="us-east-1"
         )
     except Exception as e:
         print(f"Failed to initialize S3 client: {e}")

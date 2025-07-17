@@ -1,22 +1,27 @@
+data "aws_vpc" "default" {
+  default = true
+}
+
 provider "aws" {
   region = var.region
 }
 
 # S3 Bucket
-resource "aws_s3_bucket" "locker_bucket" {
-  bucket = var.bucket_name
-  force_destroy = true
-}
+# resource "aws_s3_bucket" "locker_bucket" {
+#   bucket = var.bucket_name
+#   force_destroy = true
+# }
 
 # EC2 Key Pair (for SSH)
 resource "aws_key_pair" "locker_key" {
   key_name   = var.key_name
-  public_key = file("~/.ssh/id_rsa.pub")
+  public_key = file("C:/Users/rahul/.ssh/id_rsa.pub")
 }
 
 # Security Group
 resource "aws_security_group" "locker_sg" {
   name        = "locker-sg"
+vpc_id   = data.aws_vpc.default.id  # ✅ Add this line
 
   ingress {
     description = "Allow SSH"
@@ -71,10 +76,10 @@ resource "aws_iam_instance_profile" "ec2_profile" {
 
 # EC2 Instance
 resource "aws_instance" "locker_instance" {
-  ami           = "ami-03f4878755434977f"  # Ubuntu 22.04 (Mumbai)
+  ami = "ami-053b0d53c279acc90"  # ✅ Ubuntu 22.04 LTS in us-east-1 (Free Tier eligible)
   instance_type = var.instance_type
   key_name      = var.key_name
-  security_groups = [aws_security_group.locker_sg.name]
+  vpc_security_group_ids = [aws_security_group.locker_sg.id]
   iam_instance_profile = aws_iam_instance_profile.ec2_profile.name
 
   tags = {
