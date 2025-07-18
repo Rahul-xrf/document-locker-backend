@@ -4,7 +4,7 @@ from dotenv import load_dotenv
 load_dotenv()
 
 
-from flask import Flask, jsonify, request, send_from_directory, send_file
+from flask import Flask, request, jsonify, send_file, send_from_directory
 from flask_cors import CORS
 import boto3
 from botocore.exceptions import NoCredentialsError, ClientError
@@ -13,7 +13,7 @@ from io import BytesIO
 from datetime import datetime
 from functools import wraps
 
-app = Flask(__name__, static_folder='frontend')
+app = Flask(__name__)
 CORS(app)
 
 # AWS S3 Config
@@ -87,8 +87,6 @@ def login():
         return jsonify({"token": "sample-token"}), 200
     return jsonify({"message": "Invalid credentials"}), 401
 
-# Remove any duplicate or conflicting '/' route that returns JSON
-# Only keep the static file serving route for '/'
 @app.route('/')
 def serve_index():
     return send_from_directory('/opt/document-locker/frontend', 'index.html')
@@ -96,11 +94,6 @@ def serve_index():
 @app.route('/<path:path>')
 def serve_static_file(path):
     return send_from_directory('/opt/document-locker/frontend', path)
-
-@app.route('/status')
-def status():
-    return jsonify({"message": "Document Locker API is running"})
-
 
 @app.route('/upload', methods=['POST'])
 def upload_file():
@@ -278,4 +271,4 @@ def get_user_info():
     return jsonify({'email': email, 'name': name})
 
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=5000, debug=True)
+    app.run(host='0.0.0.0', port=5000, debug=True) 

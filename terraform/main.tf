@@ -7,10 +7,10 @@ provider "aws" {
 }
 
 # S3 Bucket
-# resource "aws_s3_bucket" "locker_bucket" {
-#   bucket = var.bucket_name
-#   force_destroy = true
-# }
+resource "aws_s3_bucket" "locker_bucket" {
+  bucket = var.bucket_name
+  force_destroy = true
+}
 
 # EC2 Key Pair (for SSH)
 resource "aws_key_pair" "locker_key" {
@@ -93,4 +93,13 @@ resource "aws_instance" "locker_instance" {
     pip3 install flask flask-cors boto3 python-dotenv
     # You can later auto-pull your app code here using git
   EOF
+}
+
+resource "aws_s3_bucket_public_access_block" "locker_bucket_public_access" {
+  bucket = aws_s3_bucket.locker_bucket.id
+
+  block_public_acls       = false
+  block_public_policy     = false
+  ignore_public_acls      = false
+  restrict_public_buckets = false
 }
